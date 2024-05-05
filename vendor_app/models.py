@@ -19,6 +19,10 @@ class Vendor(models.Model):
     average_response_time = models.FloatField()
     fulfillment_rate = models.FloatField()
 
+    def __str__(self) -> str:
+        name = self.name
+        return name
+
 class HistoricalPerformance(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.PROTECT)
     date = models.DateTimeField(auto_now=True)
@@ -26,6 +30,10 @@ class HistoricalPerformance(models.Model):
     quality_rating_avg = models.FloatField(default=0)
     average_response_time = models.FloatField(default=0)
     fulfillment_rate = models.FloatField(default=0)
+
+    def __str__(self) -> str:
+        name = self.vendor.name
+        return name
 
 class PurchaseOrder(models.Model):
     po_number = models.CharField(max_length=10,  unique=True)
@@ -39,6 +47,10 @@ class PurchaseOrder(models.Model):
     quality_rating = models.FloatField()
     issue_date = models.DateTimeField(auto_now=True)
     acknowledgment_date = models.DateTimeField(null=True)
+
+    def __str__(self) -> str:
+        name = self.vendor.name +" "+ str(self.po_number)
+        return name
 
 @receiver(post_save, sender=PurchaseOrder)  # Decorator to connect the function to the post_save signal
 def po_post_save(sender, instance, created, **kwargs):
