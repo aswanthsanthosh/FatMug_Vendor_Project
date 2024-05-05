@@ -1,7 +1,7 @@
 # FatMug_Vendor_Project
 
-In this Project I have used SQlite as the Database and a Base database file has been pushed with the Code which I was used for Testing
-virtual environment myvenv has been added and all needed dependencies is added in that environment
+In this Project I have used SQlite as the Database and a Base database file has been pushed with the Code which I was used for Testing\n
+virtual environment myvenv has been added and all needed dependencies is added in that environment\n
 API End Point used in this Projects are :-
  -  /api/vendors/ - for vendor POST and GET
  -  /api/vendors/<int:pk>/ - for Retreive, Update and Delete Vendor
