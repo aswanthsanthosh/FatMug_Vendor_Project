@@ -1,7 +1,9 @@
+from typing import Iterable
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models import F,Q,Sum, Count
+from datetime import datetime
 
 # Create your models here.
 
@@ -51,6 +53,11 @@ class PurchaseOrder(models.Model):
     def __str__(self) -> str:
         name = self.vendor.name +" "+ str(self.po_number)
         return name
+    
+    def save(self, *args, **kwargs):
+        if self.status == 'completed':
+            self.delivered_date = datetime.now()
+        super(PurchaseOrder, self).save(*args, **kwargs)
 
 @receiver(post_save, sender=PurchaseOrder)  # Decorator to connect the function to the post_save signal
 def po_post_save(sender, instance, created, **kwargs):
@@ -59,7 +66,7 @@ def po_post_save(sender, instance, created, **kwargs):
         history, _ = HistoricalPerformance.objects.get_or_create(
             vendor=instance.vendor
         )
-        On_aggregates = PurchaseOrder.objects.filter(vendor=instance.vendor, delivery_date__lte=F('delivered_date') ).aggregate(
+        On_aggregates = PurchaseOrder.objects.filter(vendor=instance.vendor, delivered_date__lte=F('delivery_date') ).aggregate(
                             count=Count('id'))
         Total_aggregates = PurchaseOrder.objects.filter(vendor=instance.vendor, status='completed').aggregate(
                     quality_rating=Sum('quality_rating')/Count('id'), count=Count('id')

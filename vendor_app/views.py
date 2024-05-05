@@ -127,7 +127,7 @@ class PurchaseOrderAcknowledgeUpdateApi(generics.CreateAPIView):
         history, _ = HistoricalPerformance.objects.get_or_create(
             vendor=object.vendor
         )
-        history.average_response_time=agr['response'].days
+        history.average_response_time=int(agr['response'].days/agr['count'])
         history.save(update_fields=['average_response_time'])
         return Response(serializer.data)
     
